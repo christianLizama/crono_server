@@ -24,9 +24,9 @@ export class UpdateCorredorDto {
   @IsOptional()
   readonly numero?: number;
 
-  @IsString()
+  @IsNumber()
   @IsOptional()
-  readonly tiempo?: string;
+  readonly tiempo?: number;
 
   @IsString()
   @IsOptional()

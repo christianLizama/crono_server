@@ -104,7 +104,7 @@ export class CorredorController {
       await this.corredorService.getCorredoresPorCategoria(categoria);
     return {
       message: 'Corredores obtenidos exitosamente',
-      data: corredores,
+      corredores: corredores,
     };
   }
 }

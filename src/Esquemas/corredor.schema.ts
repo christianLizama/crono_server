@@ -29,7 +29,7 @@ export class Corredor {
   numero: number;
 
   @Prop({ required: true })
-  tiempo: string;
+  tiempo: number;
 
   @Prop({ required: true })
   rut: string;
