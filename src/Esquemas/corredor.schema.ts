@@ -1,4 +1,4 @@
-import { Schema, Document } from 'mongoose';
+import { Schema, Prop, SchemaFactory } from '@nestjs/mongoose';
 
 // Define el enumerado de categorías
 export enum Categoria {
@@ -14,29 +14,31 @@ export enum Categoria {
   OPEN_MASTER = 'Open Master',
 }
 
-export interface Corredor extends Document {
+@Schema()
+export class Corredor {
+  @Prop({ required: true })
   nombre: string;
-  categoria: Categoria;
+
+  @Prop({ required: true, enum: Object.values(Categoria) })
+  categoria: string;
+
+  @Prop({ required: true })
   edad: number;
+
+  @Prop({ required: true })
   numero: number;
+
+  @Prop({ required: true })
   tiempo: string;
+
+  @Prop({ required: true })
   rut: string;
+
+  @Prop({ required: true })
   team: string;
+
+  @Prop({ required: true })
   telefono: string;
 }
 
-// Define el esquema de Mongoose para Corredor
-export const CorredorSchema = new Schema({
-  nombre: { type: String, required: true },
-  categoria: {
-    type: String,
-    required: true,
-    enum: Object.values(Categoria), // Validación usando los valores del enum
-  },
-  edad: { type: Number, required: true },
-  numero: { type: Number, required: true },
-  tiempo: { type: String, required: true },
-  rut: { type: String, required: true },
-  team: { type: String, required: true },
-  telefono: { type: String, required: true },
-});
+export const CorredorSchema = SchemaFactory.createForClass(Corredor);
