@@ -39,6 +39,9 @@ export class Corredor {
 
   @Prop({ required: true })
   telefono: string;
+
+  @Prop({ required: true })
+  entregado: boolean;
 }
 
 export const CorredorSchema = SchemaFactory.createForClass(Corredor);

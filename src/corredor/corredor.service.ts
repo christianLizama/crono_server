@@ -11,12 +11,17 @@ export class CorredorService {
     @InjectModel(Corredor.name) private corredorModel: Model<Corredor>,
   ) {}
 
+  async deleteCorredor(id: string): Promise<Corredor> {
+    return this.corredorModel.findByIdAndDelete(id);
+  }
+
   async findAll(): Promise<Corredor[]> {
     return this.corredorModel.find().exec();
   }
 
   async findOne(id: string): Promise<Corredor> {
-    return this.corredorModel.findById(id);
+    const corredor = await this.corredorModel.findById(id);
+    return corredor;
   }
 
   async createCorredor(
@@ -30,8 +35,20 @@ export class CorredorService {
     id: string,
     updateCorredorDto: UpdateCorredorDto,
   ): Promise<Corredor> {
-    return this.corredorModel.findByIdAndUpdate(id, updateCorredorDto, {
-      new: true,
-    });
+    const corredor = await this.corredorModel.findByIdAndUpdate(
+      id,
+      updateCorredorDto,
+      { new: true },
+    );
+    return corredor;
+  }
+
+  async marcarEntregado(id: string): Promise<Corredor> {
+    const corredor = await this.corredorModel.findByIdAndUpdate(
+      id,
+      { entregado: true },
+      { new: true },
+    );
+    return corredor;
   }
 }

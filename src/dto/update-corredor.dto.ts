@@ -1,4 +1,10 @@
-import { IsEnum, IsOptional, IsNumber, IsString } from 'class-validator';
+import {
+  IsEnum,
+  IsOptional,
+  IsNumber,
+  IsString,
+  IsBoolean,
+} from 'class-validator';
 import { Categoria } from '../esquemas/corredor.schema';
 
 export class UpdateCorredorDto {
@@ -33,4 +39,8 @@ export class UpdateCorredorDto {
   @IsString()
   @IsOptional()
   readonly telefono?: string;
+
+  @IsBoolean()
+  @IsOptional()
+  readonly entregado?: boolean;
 }

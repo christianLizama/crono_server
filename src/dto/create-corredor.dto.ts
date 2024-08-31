@@ -1,4 +1,10 @@
-import { IsEnum, IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import {
+  IsEnum,
+  IsNotEmpty,
+  IsNumber,
+  IsString,
+  IsBoolean,
+} from 'class-validator';
 import { Categoria } from '../esquemas/corredor.schema';
 
 export class CreateCorredorDto {
@@ -33,4 +39,8 @@ export class CreateCorredorDto {
   @IsString()
   @IsNotEmpty()
   readonly telefono: string;
+
+  @IsBoolean()
+  @IsNotEmpty()
+  readonly entregado: boolean;
 }
