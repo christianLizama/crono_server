@@ -15,6 +15,7 @@ import { CorredorService } from '../corredor.service';
 import { CreateCorredorDto } from 'src/dto/create-corredor.dto';
 import { UpdateCorredorDto } from 'src/dto/update-corredor.dto';
 import mongoose from 'mongoose';
+import { Categoria } from 'src/esquemas/corredor.schema';
 
 @Controller('corredores')
 export class CorredorController {
@@ -91,6 +92,19 @@ export class CorredorController {
     }
     return {
       message: 'Corredor eliminado exitosamente',
+    };
+  }
+
+  @Get('categoria/:categoria')
+  async getCorredoresPorCategoria(@Param('categoria') categoria: string) {
+    if (!Object.values(Categoria).includes(categoria as Categoria)) {
+      throw new HttpException('Categoría no válida', HttpStatus.BAD_REQUEST);
+    }
+    const corredores =
+      await this.corredorService.getCorredoresPorCategoria(categoria);
+    return {
+      message: 'Corredores obtenidos exitosamente',
+      data: corredores,
     };
   }
 }

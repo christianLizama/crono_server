@@ -1,9 +1,10 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Corredor } from 'src/esquemas/corredor.schema';
 import { CreateCorredorDto } from 'src/dto/create-corredor.dto';
 import { UpdateCorredorDto } from 'src/dto/update-corredor.dto';
+import { Categoria } from 'src/esquemas/corredor.schema';
 
 @Injectable()
 export class CorredorService {
@@ -51,4 +52,16 @@ export class CorredorService {
     );
     return corredor;
   }
+
+  async getCorredoresPorCategoria(categoria: string): Promise<Corredor[]> {
+    // Convierte el string a enum
+    if (!isCategoria(categoria)) {
+      throw new BadRequestException('Categoría no válida');
+    }
+    return this.corredorModel.find({ categoria }).exec();
+  }
+}
+
+function isCategoria(value: any): value is Categoria {
+  return Object.values(Categoria).includes(value as Categoria);
 }
