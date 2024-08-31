@@ -16,10 +16,14 @@ import { CreateCorredorDto } from 'src/dto/create-corredor.dto';
 import { UpdateCorredorDto } from 'src/dto/update-corredor.dto';
 import mongoose from 'mongoose';
 import { Categoria } from 'src/esquemas/corredor.schema';
+import { CorredoresGateway } from 'src/corredores/corredores.gateway';
 
 @Controller('corredores')
 export class CorredorController {
-  constructor(private corredorService: CorredorService) {}
+  constructor(
+    private corredorService: CorredorService,
+    private readonly corredoresGateway: CorredoresGateway,
+  ) {}
 
   @Post()
   @UsePipes(new ValidationPipe())
@@ -105,6 +109,41 @@ export class CorredorController {
     return {
       message: 'Corredores obtenidos exitosamente',
       corredores: corredores,
+    };
+  }
+
+  @Patch('enviarTiempo/:id')
+  @UsePipes(new ValidationPipe())
+  async updateTime(
+    @Param('id') id: string,
+    @Body() updateCorredorDto: UpdateCorredorDto,
+  ) {
+    const isValid = mongoose.Types.ObjectId.isValid(id);
+
+    if (!isValid) {
+      throw new HttpException('ID no válido', HttpStatus.BAD_REQUEST);
+    }
+
+    const corredor = await this.corredorService.updateTime(
+      id,
+      updateCorredorDto,
+    );
+
+    if (!corredor) {
+      throw new HttpException('Corredor no encontrado', HttpStatus.NOT_FOUND);
+    }
+    // Emitir el tiempo actualizado al WebSocket
+    this.corredoresGateway.emitUpdateTime({
+      numero: corredor.numero,
+      nombre: corredor.nombre,
+      tiempo: corredor.tiempo,
+      team: corredor.team,
+      rut: corredor.rut,
+    });
+
+    return {
+      message: 'Tiempo actualizado exitosamente',
+      data: corredor,
     };
   }
 }

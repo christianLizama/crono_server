@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { CorredorModule } from 'src/corredor/corredor.module';
+import { CorredoresGateway } from './corredores/corredores.gateway';
 
 @Module({
   imports: [
@@ -8,6 +9,6 @@ import { CorredorModule } from 'src/corredor/corredor.module';
     CorredorModule,
   ],
   controllers: [],
-  providers: [],
+  providers: [CorredoresGateway],
 })
 export class AppModule {}

@@ -60,6 +60,18 @@ export class CorredorService {
     }
     return this.corredorModel.find({ categoria }).exec();
   }
+
+  async updateTime(
+    id: string,
+    updateCorredorDto: UpdateCorredorDto,
+  ): Promise<Corredor> {
+    const corredor = await this.corredorModel.findByIdAndUpdate(
+      id,
+      updateCorredorDto,
+      { new: true },
+    );
+    return corredor;
+  }
 }
 
 function isCategoria(value: any): value is Categoria {
