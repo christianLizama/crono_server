@@ -18,6 +18,6 @@ COPY .development.env ./
 
 # Exponer el puerto en el que corre la aplicación
 EXPOSE 3030
-
+EXPOSE 81
 # Comando para correr la aplicación
 CMD ["npm", "run", "start:dev"]

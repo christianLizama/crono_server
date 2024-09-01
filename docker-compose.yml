@@ -8,6 +8,7 @@ services:
       - .development.env
     ports:
       - "3030:3030"
+      - "81:81"
     volumes:
       - .:/usr/src/app
       - /usr/src/app/node_modules
