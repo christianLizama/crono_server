@@ -8,7 +8,7 @@ WORKDIR /usr/src/app
 COPY package*.json ./
 
 # Instalar las dependencias
-RUN npm install --production
+RUN npm install --only=development
 
 # Copiar el resto de la aplicación
 COPY . .
@@ -20,4 +20,4 @@ COPY .development.env ./
 EXPOSE 3030
 
 # Comando para correr la aplicación
-CMD ["npm", "run", "start:prod"]
+CMD ["npm", "run", "start:dev"]
