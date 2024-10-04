@@ -112,6 +112,19 @@ export class CorredorController {
     };
   }
 
+  @Get('categoria/:categoria/tiempo')
+  async getCorredoresPorCategoriaYTiempo(@Param('categoria') categoria: string) {
+    if (!Object.values(Categoria).includes(categoria as Categoria)) {
+      throw new HttpException('Categoría no válida', HttpStatus.BAD_REQUEST);
+    }
+    const corredores =
+      await this.corredorService.getCorredoresPorCategoriaYTiempo(categoria);
+    return {
+      message: 'Corredores obtenidos exitosamente',
+      corredores: corredores,
+    };
+  }
+
   @Patch('enviarTiempo/:id')
   @UsePipes(new ValidationPipe())
   async updateTime(
@@ -133,14 +146,14 @@ export class CorredorController {
       throw new HttpException('Corredor no encontrado', HttpStatus.NOT_FOUND);
     }
     // Emitir el tiempo actualizado al WebSocket
-    this.corredoresGateway.emitUpdateTime({
-      numero: corredor.numero,
-      nombre: corredor.nombre,
-      tiempo: corredor.tiempo,
-      team: corredor.team,
-      rut: corredor.rut,
-    });
-
+    // this.corredoresGateway.emitUpdateTime({
+    //   numero: corredor.numero,
+    //   nombre: corredor.nombre,
+    //   tiempo: corredor.tiempo,
+    //   team: corredor.team,
+    //   rut: corredor.rut,
+    // });
+    console.log('Tiempo actualizado');
     return {
       message: 'Tiempo actualizado exitosamente',
       data: corredor,

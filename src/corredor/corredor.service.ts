@@ -28,7 +28,23 @@ export class CorredorService {
   async createCorredor(
     createCorredorDto: CreateCorredorDto,
   ): Promise<Corredor> {
-    const nuevoCorredor = new this.corredorModel(createCorredorDto);
+    // Encuentra el número más alto existente
+    const corredorConNumeroMayor = await this.corredorModel
+      .findOne()
+      .sort({ numero: -1 }) // Ordena por el campo `numero` en orden descendente
+      .exec();
+
+    // Si no existen corredores, el número será 1, de lo contrario será el siguiente consecutivo
+    const nuevoNumero = corredorConNumeroMayor
+      ? corredorConNumeroMayor.numero + 1
+      : 1;
+
+    // Crea un nuevo corredor con el número calculado
+    const nuevoCorredor = new this.corredorModel({
+      ...createCorredorDto,
+      numero: nuevoNumero, // Asigna el número calculado
+    });
+
     return nuevoCorredor.save();
   }
 
@@ -59,6 +75,17 @@ export class CorredorService {
       throw new BadRequestException('Categoría no válida');
     }
     return this.corredorModel.find({ categoria }).exec();
+  }
+
+  async getCorredoresPorCategoriaYTiempo(
+    category: string,
+  ): Promise<Corredor[]> {
+    if (!isCategoria(category)) {
+      throw new BadRequestException('Categoría no válida');
+    }
+    return this.corredorModel
+      .find({ categoria: category, tiempo: { $gt: 0 } })
+      .exec();
   }
 
   async updateTime(
