@@ -74,7 +74,7 @@ export class CorredorService {
     if (!isCategoria(categoria)) {
       throw new BadRequestException('Categoría no válida');
     }
-    return this.corredorModel.find({ categoria }).exec();
+    return this.corredorModel.find({ categoria }).sort({ numero: 1 }).exec();
   }
 
   async getCorredoresPorCategoriaYTiempo(
@@ -84,7 +84,7 @@ export class CorredorService {
       throw new BadRequestException('Categoría no válida');
     }
     return this.corredorModel
-      .find({ categoria: category, tiempo: { $gt: 0 } })
+      .find({ categoria: category, tiempo: { $gt: 0 } }).sort({ tiempo:1 })
       .exec();
   }
 
@@ -98,6 +98,15 @@ export class CorredorService {
       { new: true },
     );
     return corredor;
+  }
+
+  async reiniciarTiempos(){
+    const corredores = await this.corredorModel.updateMany(
+      {
+        tiempo:0
+      }
+    )
+    return corredores;
   }
 }
 
