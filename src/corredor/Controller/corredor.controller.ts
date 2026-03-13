@@ -25,6 +25,12 @@ export class CorredorController {
     private readonly corredoresGateway: CorredoresGateway,
   ) {}
 
+  @Patch('reiniciarTiempos')
+  async reinciarTiempos(){
+    const corredores = await this.corredorService.reiniciarTiempos();
+    return corredores;
+  }
+
   @Post()
   @UsePipes(new ValidationPipe())
   async createCorredor(@Body() createCorredorDto: CreateCorredorDto) {
@@ -39,9 +45,12 @@ export class CorredorController {
   @Get()
   async getAllCorredores() {
     const corredores = await this.corredorService.findAll();
+    const cantidad = corredores.length;
+    
     return {
       message: 'Corredores obtenidos exitosamente',
       data: corredores,
+      cantidad: cantidad,
     };
   }
 
