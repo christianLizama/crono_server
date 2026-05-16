@@ -22,7 +22,9 @@ import { ConfigModule } from '@nestjs/config';
         const isDocker = process.env.IS_DOCKER === 'true';
         if (isDocker) {
           return {
-            uri: `mongodb://${process.env.MONGO_USERNAME}:${process.env.MONGO_PASSWORD}@${process.env.MONGO_HOST}:${process.env.MONGO_PORT}/${process.env.MONGO_DATABASE}?authSource=admin&retryWrites=true&w=majority`,
+            // IMPORTANTE: Dentro de la red interna de Docker, el contenedor de mongo siempre
+            // escucha en el puerto 27017, sin importar a qué puerto esté expuesto hacia el exterior (27018).
+            uri: `mongodb://${process.env.MONGO_USERNAME}:${process.env.MONGO_PASSWORD}@${process.env.MONGO_HOST}:27017/${process.env.MONGO_DATABASE}?authSource=admin&retryWrites=true&w=majority`,
           };
         }
 
