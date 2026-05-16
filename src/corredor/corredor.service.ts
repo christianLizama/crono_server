@@ -100,13 +100,12 @@ export class CorredorService {
     return corredor;
   }
 
-  async reiniciarTiempos(){
-    const corredores = await this.corredorModel.updateMany(
-      {
-        tiempo:0
-      }
-    )
-    return corredores;
+  async reiniciarTiempos() {
+    const result = await this.corredorModel.updateMany(
+      {}, // Filtro: todos los documentos
+      { $set: { tiempo: 0 } }, // Actualización: setear tiempo a 0
+    );
+    return result;
   }
 }
 

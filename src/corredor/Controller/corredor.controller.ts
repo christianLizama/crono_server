@@ -16,13 +16,11 @@ import { CreateCorredorDto } from 'src/dto/create-corredor.dto';
 import { UpdateCorredorDto } from 'src/dto/update-corredor.dto';
 import mongoose from 'mongoose';
 import { Categoria } from 'src/esquemas/corredor.schema';
-import { CorredoresGateway } from 'src/corredores/corredores.gateway';
 
 @Controller('corredores')
 export class CorredorController {
   constructor(
     private corredorService: CorredorService,
-    private readonly corredoresGateway: CorredoresGateway,
   ) {}
 
   @Patch('reiniciarTiempos')
@@ -46,7 +44,7 @@ export class CorredorController {
   async getAllCorredores() {
     const corredores = await this.corredorService.findAll();
     const cantidad = corredores.length;
-    
+    console.log('obteniendo corredores totales');
     return {
       message: 'Corredores obtenidos exitosamente',
       data: corredores,
@@ -154,15 +152,7 @@ export class CorredorController {
     if (!corredor) {
       throw new HttpException('Corredor no encontrado', HttpStatus.NOT_FOUND);
     }
-    // Emitir el tiempo actualizado al WebSocket
-    // this.corredoresGateway.emitUpdateTime({
-    //   numero: corredor.numero,
-    //   nombre: corredor.nombre,
-    //   tiempo: corredor.tiempo,
-    //   team: corredor.team,
-    //   rut: corredor.rut,
-    // });
-    console.log('Tiempo actualizado');
+    console.log('Tiempo actualizado (legacy)');
     return {
       message: 'Tiempo actualizado exitosamente',
       data: corredor,
