@@ -12,6 +12,8 @@ export enum Categoria {
   ELITE = 'Elite',
   MASTER_A = 'Master A',
   OPEN_MASTER = 'Open Master',
+  EBIKE_VARONES = 'E-bike Varones',
+  EBIKE_DAMAS = 'E-bike Damas',
 }
 
 @Schema()

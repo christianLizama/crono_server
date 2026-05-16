@@ -22,10 +22,6 @@ export class CreateCorredorDto {
 
   @IsNumber()
   @IsNotEmpty()
-  readonly numero: number;
-
-  @IsNumber()
-  @IsNotEmpty()
   readonly tiempo: number;
 
   @IsString()

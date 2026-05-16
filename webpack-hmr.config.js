@@ -4,6 +4,11 @@ const { RunScriptWebpackPlugin } = require('run-script-webpack-plugin');
 module.exports = function (options, webpack) {
   return {
     ...options,
+    watchOptions: {
+      aggregateTimeout: 300,
+      poll: 1000,
+      ignored: /node_modules/,
+    },
     entry: ['webpack/hot/poll?100', options.entry],
     externals: [
       nodeExternals({

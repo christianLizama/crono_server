@@ -6,6 +6,8 @@ services:
     container_name: nestjs_app
     env_file:
       - .development.env
+    environment:
+      - IS_DOCKER=true
     ports:
       - "3030:3030"
       - "81:81"
@@ -22,7 +24,7 @@ services:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: example
     ports:
-      - "27017:27017"
+      - "27018:27017"
     volumes:
       - mongo_data:/data/db
 
