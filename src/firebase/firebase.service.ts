@@ -12,44 +12,69 @@ const firebaseConfig = {
 @Injectable()
 export class FirebaseService implements OnModuleInit {
   private readonly logger = new Logger(FirebaseService.name);
-  private firestore: admin.firestore.Firestore;
+  private firestore: admin.firestore.Firestore | null = null;
 
   onModuleInit() {
     if (admin.apps.length === 0) {
-      const serviceAccountPath = path.join(
+      // 1. Intentar encontrar 'firebase-service-account.json' o cualquier *.json de firebase en la raíz
+      let serviceAccountPath = path.join(
         process.cwd(),
         'firebase-service-account.json',
       );
 
       if (!fs.existsSync(serviceAccountPath)) {
-        this.logger.error(
-          '❌ No se encontró firebase-service-account.json en la raíz del proyecto.',
-        );
-        this.logger.error(
-          '   Descárgalo desde: Firebase Console → Project Settings → Service accounts → Generate new private key',
+        try {
+          const files = fs.readdirSync(process.cwd());
+          const found = files.find(
+            (f) =>
+              f.toLowerCase().includes('firebase') &&
+              f.endsWith('.json') &&
+              f !== 'package.json',
+          );
+          if (found) {
+            serviceAccountPath = path.join(process.cwd(), found);
+          }
+        } catch {
+          // Ignorar si no se puede leer directorio
+        }
+      }
+
+      // 2. Si no existe ningún archivo, registrar advertencia y NO tumbar el servidor
+      if (!fs.existsSync(serviceAccountPath)) {
+        this.logger.warn(
+          '⚠️ No se encontró el archivo de credenciales de Firebase (firebase-service-account.json). El servidor funcionará normalmente, pero la importación desde Firebase requerirá dicho archivo.',
         );
         return;
       }
 
-      const serviceAccount = JSON.parse(
-        fs.readFileSync(serviceAccountPath, 'utf8'),
-      );
+      // 3. Inicializar Admin SDK de forma segura
+      try {
+        const serviceAccount = JSON.parse(
+          fs.readFileSync(serviceAccountPath, 'utf8'),
+        );
 
-      admin.initializeApp({
-        credential: admin.credential.cert(serviceAccount),
-        projectId: firebaseConfig.projectId,
-        storageBucket: firebaseConfig.storageBucket,
-      });
+        admin.initializeApp({
+          credential: admin.credential.cert(serviceAccount),
+          projectId: firebaseConfig.projectId,
+          storageBucket: firebaseConfig.storageBucket,
+        });
 
-      this.logger.log(
-        `✅ Firebase Admin SDK inicializado — Proyecto: ${firebaseConfig.projectId}`,
-      );
+        this.firestore = admin.firestore();
+        this.logger.log(
+          `✅ Firebase Admin SDK inicializado — Proyecto: ${firebaseConfig.projectId}`,
+        );
+      } catch (error) {
+        this.logger.error(
+          `❌ Error al inicializar Firebase Admin SDK: ${error.message}`,
+        );
+        this.firestore = null;
+      }
+    } else {
+      this.firestore = admin.firestore();
     }
-
-    this.firestore = admin.firestore();
   }
 
-  getFirestore(): admin.firestore.Firestore {
+  getFirestore(): admin.firestore.Firestore | null {
     return this.firestore;
   }
 }
