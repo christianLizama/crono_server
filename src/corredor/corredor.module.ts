@@ -3,6 +3,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { Corredor, CorredorSchema } from 'src/esquemas/corredor.schema';
 import { CorredorService } from './corredor.service';
 import { CorredorController } from './Controller/corredor.controller';
+import { FirebaseModule } from 'src/firebase/firebase.module';
 
 @Module({
   imports: [
@@ -12,6 +13,7 @@ import { CorredorController } from './Controller/corredor.controller';
         schema: CorredorSchema,
       },
     ]),
+    FirebaseModule,
   ],
   providers: [CorredorService],
   controllers: [CorredorController],
