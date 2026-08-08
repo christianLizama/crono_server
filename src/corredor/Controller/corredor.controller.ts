@@ -29,6 +29,22 @@ export class CorredorController {
     return corredores;
   }
 
+  @Post('importar-firebase')
+  async importarDesdeFirebase() {
+    try {
+      const resultado = await this.corredorService.importarDesdeFirebase();
+      return {
+        message: `Importación completada: ${resultado.importados} importados, ${resultado.omitidos} omitidos, ${resultado.errores} errores`,
+        ...resultado,
+      };
+    } catch (error) {
+      throw new HttpException(
+        `Error al importar desde Firebase: ${error.message}`,
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
+
   @Post()
   @UsePipes(new ValidationPipe())
   async createCorredor(@Body() createCorredorDto: CreateCorredorDto) {
@@ -108,9 +124,6 @@ export class CorredorController {
 
   @Get('categoria/:categoria')
   async getCorredoresPorCategoria(@Param('categoria') categoria: string) {
-    if (!Object.values(Categoria).includes(categoria as Categoria)) {
-      throw new HttpException('Categoría no válida', HttpStatus.BAD_REQUEST);
-    }
     const corredores =
       await this.corredorService.getCorredoresPorCategoria(categoria);
     return {
@@ -121,9 +134,6 @@ export class CorredorController {
 
   @Get('categoria/:categoria/tiempo')
   async getCorredoresPorCategoriaYTiempo(@Param('categoria') categoria: string) {
-    if (!Object.values(Categoria).includes(categoria as Categoria)) {
-      throw new HttpException('Categoría no válida', HttpStatus.BAD_REQUEST);
-    }
     const corredores =
       await this.corredorService.getCorredoresPorCategoriaYTiempo(categoria);
     return {

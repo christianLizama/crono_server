@@ -5,6 +5,8 @@ import { CarreraModule } from 'src/carrera/carrera.module';
 import { CorredoresModule } from './corredores/corredores.module';
 import { ConfigModule } from '@nestjs/config';
 
+import { TelegramModule } from './telegram/telegram.module';
+
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -37,6 +39,7 @@ import { ConfigModule } from '@nestjs/config';
     CorredorModule,
     CarreraModule,
     CorredoresModule,
+    TelegramModule,
   ],
   controllers: [],
   providers: [],

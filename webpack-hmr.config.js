@@ -14,6 +14,8 @@ module.exports = function (options, webpack) {
       nodeExternals({
         allowlist: ['webpack/hot/poll?100'],
       }),
+      // firebase-admin tiene módulos nativos y no puede ser bundleado
+      { 'firebase-admin': 'commonjs firebase-admin' },
     ],
     plugins: [
       ...options.plugins,

@@ -45,6 +45,9 @@ lerna-debug.log*
 .env.local
 .development.env
 
+# Firebase Service Account (credenciales sensibles — NO subir a git)
+firebase-service-account.json
+
 # temp directory
 .temp
 .tmp

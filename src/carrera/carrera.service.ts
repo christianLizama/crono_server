@@ -227,10 +227,6 @@ export class CarreraService {
       throw new NotFoundException('Carrera no encontrada');
     }
 
-    if (carrera.estado !== EstadoCarrera.EN_CURSO) {
-      throw new BadRequestException('La carrera no está en curso');
-    }
-
     const resultado = carrera.resultados.find(
       (r) => r.corredor.toString() === corredorId,
     );
@@ -238,16 +234,6 @@ export class CarreraService {
     if (!resultado) {
       throw new NotFoundException(
         'Corredor no encontrado en esta carrera',
-      );
-    }
-
-    // Permitir sobrescribir tiempo si está corriendo o ya finalizado (corrección)
-    if (
-      resultado.estado !== EstadoResultado.CORRIENDO &&
-      resultado.estado !== EstadoResultado.FINALIZADO
-    ) {
-      throw new BadRequestException(
-        `No se puede registrar tiempo. Estado actual: ${resultado.estado}`,
       );
     }
 
@@ -262,6 +248,11 @@ export class CarreraService {
 
     // Recalcular posiciones basándose en tiempos
     this.recalcularPosiciones(carrera);
+
+    // Sincronizar tiempo en el documento principal del corredor
+    await this.corredorModel.findByIdAndUpdate(corredorId, {
+      tiempo: resultado.tiempo,
+    });
 
     await carrera.save();
     return this.findOne(carreraId);
